@@ -1,10 +1,10 @@
 from chess import IllegalMoveError
-from engine import shallowOrange
+from shallowOrange import shallowOrange
 from chessboard import display
 import time
 
 # initialization variables
-depth = 3
+depth = 6
 starting_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 position = True # True is white, False is black
 
@@ -37,11 +37,14 @@ def humanPlay(position):
         tempBoard = engine.board.copy()
         try:
             engine.board.push_san(move)
+            updateBoard()
             engineMove = engine.bestMove()
             engine.board.push(engineMove)
             updateBoard()
+            print(engine.evaluate())
             move = input("Enter your move: ")
-        except:
+        except Exception as e:
+            print(e)
             print("Illegal move, try again")
             move = input("Enter your move: ")
 
@@ -55,6 +58,7 @@ if __name__ == "__main__":
     # start the display
     game_board = display.start()
 
+    # start the game
     humanPlay(position)
 
         
