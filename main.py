@@ -3,7 +3,7 @@ from chessboard import display
 import time
 
 # initialization variables
-depth = 2
+depth = 5
 starting_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 if __name__ == "__main__":

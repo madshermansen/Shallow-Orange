@@ -1,4 +1,5 @@
 import chess
+import chess.polyglot
 
 class shallowOrange:
 
@@ -12,9 +13,11 @@ class shallowOrange:
     }
 
 
-    def __init__(self, FEN ="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", depth = 1) -> None:
+    def __init__(self, FEN ="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", depth = 1, book="polyglot/baron30.bin") -> None:
         self.board = chess.Board(FEN)
         self.depth = depth
+        self.book = book
+        self.early_game = True
 
     def evaluate(self):
         if self.board.is_stalemate():
@@ -59,8 +62,20 @@ class shallowOrange:
                 if alpha >= beta:
                     break
             return value
-        
+    
+    def handleBookMoves(self):
+        with chess.polyglot.open_reader(self.book) as reader:
+            # find best book move
+            try:
+                entry = reader.weighted_choice(self.board)
+                return entry.move
+            except IndexError:
+                self.early_game = False
+        return self.bestMove()
+
     def bestMove(self):
+        if self.early_game:
+            return self.handleBookMoves()
         bestMove = None
         bestValue = float('-inf')
         for move in self.board.legal_moves:
@@ -71,6 +86,7 @@ class shallowOrange:
                 bestMove = move
                 bestValue = boardValue
         return bestMove
-        
+            
+
     def gameOver(self):
         return self.board.is_game_over()
