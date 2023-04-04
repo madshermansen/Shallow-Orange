@@ -3,7 +3,7 @@ from chessboard import display
 import time
 
 # initialization variables
-depth = 5
+depth = 4
 starting_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 if __name__ == "__main__":
@@ -18,6 +18,6 @@ if __name__ == "__main__":
         best_move = engine.bestMove()
         print(best_move)
         engine.board.push(best_move)
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 

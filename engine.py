@@ -41,27 +41,35 @@ class shallowOrange:
 
     def alphabeta(self, depth, alpha, beta, maximizingPlayer):
         if depth == 0:
-            return self.evaluate()
+            return self.evaluate(), None
         if maximizingPlayer:
-            value = float('-inf')
+            maxEval = float('-inf')
+            bestMove = None
             for move in self.board.legal_moves:
                 self.board.push(move)
-                value = max(value, self.alphabeta(depth - 1, alpha, beta, False))
+                evaluation = self.alphabeta(depth - 1, alpha, beta, False)[0]
                 self.board.pop()
-                alpha = max(alpha, value)
-                if alpha >= beta:
+                if evaluation > maxEval:
+                    maxEval = evaluation
+                    bestMove = move
+                alpha = max(alpha, evaluation)
+                if beta <= alpha:
                     break
-            return value
+            return maxEval, bestMove
         else:
-            value = float('inf')
+            minEval = float('inf')
+            bestMove = None
             for move in self.board.legal_moves:
                 self.board.push(move)
-                value = min(value, self.alphabeta(depth - 1, alpha, beta, True))
+                evaluation = self.alphabeta(depth - 1, alpha, beta, True)[0]
                 self.board.pop()
-                beta = min(beta, value)
-                if alpha >= beta:
+                if evaluation < minEval:
+                    minEval = evaluation
+                    bestMove = move
+                beta = min(beta, evaluation)
+                if beta <= alpha:
                     break
-            return value
+            return minEval, bestMove
     
     def handleBookMoves(self):
         with chess.polyglot.open_reader(self.book) as reader:
@@ -76,15 +84,7 @@ class shallowOrange:
     def bestMove(self):
         if self.early_game:
             return self.handleBookMoves()
-        bestMove = None
-        bestValue = float('-inf')
-        for move in self.board.legal_moves:
-            self.board.push(move)
-            boardValue = self.alphabeta(self.depth - 1, float('-inf'), float('inf'), self.board.turn)
-            self.board.pop()
-            if boardValue > bestValue:
-                bestMove = move
-                bestValue = boardValue
+        evaluation, bestMove = self.alphabeta(self.depth - 1, float('-inf'), float('inf'), self.board.turn)
         return bestMove
             
 
