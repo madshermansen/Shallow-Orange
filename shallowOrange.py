@@ -141,7 +141,7 @@ class shallowOrange:
         ]
     }
 
-    def __init__(self, FEN ="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", depth = 1, book="polyglot/baron30.bin") -> None:
+    def __init__(self, FEN ="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", depth = 1, book="polyglot/Human.bin") -> None:
         self.board = chess.Board(FEN)
         self.depth = depth
         self.book = book
